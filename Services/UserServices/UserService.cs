@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using carpool.Models;
 
+
 namespace carpool.Services.UserServices
 {
     public class UserService : IUserService
@@ -18,10 +19,12 @@ namespace carpool.Services.UserServices
         {
             var user = CheckUserExist(userModel.Email);
             if (user) return "User Already Exist With Email " + userModel.Email;
-            
+
             else
             {
             userModel.UserId = Guid.NewGuid();
+            userModel.Password = userModel.ConfirmPassword = BCrypt.Net.BCrypt.HashPassword(userModel.Password);
+            //BCrypt.Net.BCrypt.Verify(entered Password, Db Password); for login
             users.Add(userModel);
             return "User Created Successfully!";
             }

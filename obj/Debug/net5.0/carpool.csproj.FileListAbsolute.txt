@@ -27,3 +27,4 @@ C:\Users\Noman Anjum\Desktop\carpool\obj\Debug\net5.0\carpool.dll
 C:\Users\Noman Anjum\Desktop\carpool\obj\Debug\net5.0\ref\carpool.dll
 C:\Users\Noman Anjum\Desktop\carpool\obj\Debug\net5.0\carpool.pdb
 C:\Users\Noman Anjum\Desktop\carpool\obj\Debug\net5.0\carpool.genruntimeconfig.cache
+C:\Users\Noman Anjum\Desktop\carpool\bin\Debug\net5.0\BCrypt.Net-Next.dll
