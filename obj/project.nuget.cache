@@ -1,14 +1,17 @@
 {
   "version": 2,
-  "dgSpecHash": "m9c3vIeBHtMOwV0vOtbgcrzwi4nFI+g33NYwPIb5ZlagdL15sFbGAufYQNcgkIbbmK6OIGIspYbGLMXiVLwTGQ==",
+  "dgSpecHash": "6/r9BcEqNzNY3wU2XSOyyTqk1zcn8H+qPgbRIySp5p5vXkK+r/wG4HyaJxW9+82jl9NfhrVTMIOcQ9+D9Rf8Qg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Noman Anjum\\Desktop\\carpool\\carpool.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Noman Anjum\\.nuget\\packages\\bcrypt.net-next\\4.0.2\\bcrypt.net-next.4.0.2.nupkg.sha512",
+    "C:\\Users\\Noman Anjum\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\5.0.8\\microsoft.aspnetcore.authentication.jwtbearer.5.0.8.nupkg.sha512",
     "C:\\Users\\Noman Anjum\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\Noman Anjum\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
     "C:\\Users\\Noman Anjum\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\6.12.0\\microsoft.identitymodel.jsonwebtokens.6.12.0.nupkg.sha512",
     "C:\\Users\\Noman Anjum\\.nuget\\packages\\microsoft.identitymodel.logging\\6.12.0\\microsoft.identitymodel.logging.6.12.0.nupkg.sha512",
+    "C:\\Users\\Noman Anjum\\.nuget\\packages\\microsoft.identitymodel.protocols\\6.7.1\\microsoft.identitymodel.protocols.6.7.1.nupkg.sha512",
+    "C:\\Users\\Noman Anjum\\.nuget\\packages\\microsoft.identitymodel.protocols.openidconnect\\6.7.1\\microsoft.identitymodel.protocols.openidconnect.6.7.1.nupkg.sha512",
     "C:\\Users\\Noman Anjum\\.nuget\\packages\\microsoft.identitymodel.tokens\\6.12.0\\microsoft.identitymodel.tokens.6.12.0.nupkg.sha512",
     "C:\\Users\\Noman Anjum\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\Noman Anjum\\.nuget\\packages\\swashbuckle.aspnetcore\\5.6.3\\swashbuckle.aspnetcore.5.6.3.nupkg.sha512",
