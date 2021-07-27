@@ -7,7 +7,7 @@ namespace carpool.Models
     public class CaptainModel
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public Guid CaptainId { get; set; }
+        public  Guid CaptainId { get; set; }
 
         [Required(ErrorMessage = "User Name Required!")]
         [MaxLength (50,ErrorMessage ="Too Long Name")]

@@ -25,5 +25,10 @@ namespace carpool.Controllers
         {
             return Ok(_captainService.CreateCaptain(captainModel));
         }
+        [HttpPatch("UpdateCaptain")]
+        public IActionResult UpdateCaptain(CaptainModel captainModel)
+        {
+            return Ok(_captainService.UpdateCaptain(captainModel));
+        }
     }
 }

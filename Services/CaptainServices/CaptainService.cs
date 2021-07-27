@@ -42,14 +42,33 @@ namespace carpool.Services.CaptainServices
             throw new NotImplementedException();
         }
 
-        public CaptainModel GetCaptain(Guid userId)
+        public CaptainModel GetCaptain(string email)
         {
-            throw new NotImplementedException();
+             return captains.FirstOrDefault(u => u.Email == email);
         }
 
         public string UpdateCaptain(CaptainModel captainModel)
         {
-            throw new NotImplementedException();
+            var captain = GetCaptain(captainModel.Email);
+            if (captain != null)
+            {
+                if(captain.Email == captainModel.Email)
+                {
+                    captain.CaptainName = captainModel.CaptainName;
+                    captain.CaptainPhone = captainModel.CaptainPhone;
+                    captain.Password = captainModel.Password;
+                    captain.ConfirmPassword = captainModel.ConfirmPassword;
+                    captain.Gender = captainModel.Gender;
+                    captain.VehicleNumber = captainModel.VehicleNumber;
+                    captain.VehicleModel = captainModel.VehicleModel;
+                    captain.VehicleColor = captainModel.VehicleColor;
+                    captain.FarePerSeats = captainModel.FarePerSeats;
+                    return "Captain Updated Successfully!";
+                }
+                else return "You can't change your id OR email ";
+            }
+            else return "Something went wrong";
+ 
         }
     }
 }
