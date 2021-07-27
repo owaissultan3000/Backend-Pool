@@ -20,6 +20,7 @@ namespace carpool.Services.UserServices
         }
         public string Authenticate(string email,string password)
         {
+            //BCrypt.Net.BCrypt.Verify(entered Password, Db Password); for login
             if(!users.Any(u => u.Key == email && u.Value == password))
             {
                 return null;

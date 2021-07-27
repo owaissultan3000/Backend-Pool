@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using carpool.Services.CaptainServices;
 using carpool.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -31,6 +32,7 @@ namespace carpool
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICaptainService, CaptainService>();
             services.AddControllers();
             var key = "qwertyuiopasdfghjklzxcvbnm";
             services.AddAuthentication(x =>
