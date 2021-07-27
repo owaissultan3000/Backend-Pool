@@ -36,9 +36,9 @@ namespace carpool.Models
 
         [Required(ErrorMessage = "Vehicle Color is required.")]
         public string VehicleColor { get; set; }
-        public byte[] CaptainImage { get; set; }
+        public string CaptainImage { get; set; }
 
-        public int FarePerSeats { get; set; }
+        public string FarePerSeats { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
         [StringLength(255, ErrorMessage = "Too Short Password", MinimumLength = 8)]
