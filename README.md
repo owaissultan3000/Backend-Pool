@@ -1,3 +1,3 @@
 # backend-pool
 
-Basic CRUD operation for practice using dot net core 5
+Backend of the car pooling application using dot net core 5
