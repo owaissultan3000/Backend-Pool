@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using carpool.Models;
 
 namespace carpool.Services.UserServices
 {
     public interface IUserService
     {
-        public bool CheckUserExist(string email);
-        public List<UserModel> AllUsers();
-        public UserModel GetUser(Guid userId);
-        public string CreateUser(UserModel userModel);
-        public string UpdateUser(UserModel userModel);
-        public string DeleteUser(Guid id);
+        public Task<bool> CheckUserExist(string email);
+        public Task<List<User>> AllUsers();
+        public Task<User> GetUser(string email);
+        public Task<string> CreateUser(UserModel userModel);
+        public Task<string> UpdateUser(UserModel userModel);
+        public Task<string> DeleteUser(string email);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using carpool.Models;
 using carpool.Services.CaptainServices;
 using carpool.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,12 +29,13 @@ namespace carpool
         }
 
         public IConfiguration Configuration { get; }
-
+    //ApiDbContext
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ICaptainService, CaptainService>();
+            services.AddDbContext<ApiDbContext>(item => item.UseSqlServer(Configuration.GetConnectionString("CarpoolDBConnection")));
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICaptainService, CaptainService>();
             services.AddControllers();
             var key = "qwertyuiopasdfghjklzxcvbnm";
             services.AddAuthentication(x =>
