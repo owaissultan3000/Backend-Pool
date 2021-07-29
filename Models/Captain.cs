@@ -33,8 +33,6 @@ namespace carpool.Models
         public string FarePerSeats { get; set; }
         [StringLength(255)]
         public string Passwords { get; set; }
-        [StringLength(255)]
-        public string ConfirmPassword { get; set; }
         [StringLength(200)]
         public string CreateionDate { get; set; }
         [StringLength(10)]

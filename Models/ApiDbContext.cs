@@ -43,8 +43,6 @@ namespace carpool.Models
 
                 entity.Property(e => e.CaptainPhone).IsUnicode(false);
 
-                entity.Property(e => e.ConfirmPassword).IsUnicode(false);
-
                 entity.Property(e => e.CreateionDate).IsUnicode(false);
 
                 entity.Property(e => e.Email).IsUnicode(false);
@@ -67,8 +65,6 @@ namespace carpool.Models
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.UserId).IsUnicode(false);
-
-                entity.Property(e => e.ConfirmPassword).IsUnicode(false);
 
                 entity.Property(e => e.Email).IsUnicode(false);
 

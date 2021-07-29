@@ -45,7 +45,7 @@ namespace carpool.Services.UserServices
                     Gender = userModel.Gender,
                     Email = userModel.Email,
                     Passwords = userModel.Password,
-                    ConfirmPassword = userModel.ConfirmPassword,
+                    // ConfirmPassword = userModel.ConfirmPassword,
                     Role = userModel.Role.ToString()
                 };
                 await db.Users.AddAsync(userDB);
@@ -108,7 +108,7 @@ namespace carpool.Services.UserServices
                     Gender = userModel.Gender,
                     Email = user.Email,
                     Passwords = BCrypt.Net.BCrypt.HashPassword(userModel.Password),
-                    ConfirmPassword = BCrypt.Net.BCrypt.HashPassword(userModel.ConfirmPassword),
+                    // ConfirmPassword = BCrypt.Net.BCrypt.HashPassword(userModel.ConfirmPassword),
                     Role = user.Role.ToString()
                 };
                 //Update that user

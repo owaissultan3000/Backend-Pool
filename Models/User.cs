@@ -23,8 +23,6 @@ namespace carpool.Models
         public string Email { get; set; }
         [StringLength(255)]
         public string Passwords { get; set; }
-        [StringLength(255)]
-        public string ConfirmPassword { get; set; }
         [StringLength(10)]
         public string Role { get; set; }
     }
