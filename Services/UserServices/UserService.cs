@@ -24,29 +24,25 @@ namespace carpool.Services.UserServices
             return null;
         }
 
-        public Task<bool> CheckUserExist(string email)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<string> CreateUser(UserModel userModel)
         {
             if (db != null)
             {
-                User user = await db.Users.FirstOrDefaultAsync(u => u.Email == userModel.Email);
+                var user = await db.Users.FirstOrDefaultAsync(u => u.Email == userModel.Email);
                 if (user == null)
                 {
                     userModel.UserId = Guid.NewGuid();
                     userModel.Password = userModel.ConfirmPassword = BCrypt.Net.BCrypt.HashPassword(userModel.Password);
                     User userDB = new User{
                     UserId = userModel.UserId.ToString(),
-                    UserName = userModel.UserName,
+                    UserName = userModel.UserName.ToLower(),
                     PhoneNumber = userModel.PhoneNumber,
-                    Gender = userModel.Gender,
-                    Email = userModel.Email,
+                    Gender = userModel.Gender.ToLower(),
+                    Email = userModel.Email.ToLower(),
                     Passwords = userModel.Password,
-                    // ConfirmPassword = userModel.ConfirmPassword,
-                    Role = userModel.Role.ToString()
+                    CreateionDate = DateTime.Now,
+                    Role = userModel.Role.ToString().ToLower()
                 };
                 await db.Users.AddAsync(userDB);
                 await db.SaveChangesAsync();

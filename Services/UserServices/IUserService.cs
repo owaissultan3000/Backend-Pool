@@ -7,7 +7,6 @@ namespace carpool.Services.UserServices
 {
     public interface IUserService
     {
-        public Task<bool> CheckUserExist(string email);
         public Task<List<User>> AllUsers();
         public Task<User> GetUser(string email);
         public Task<string> CreateUser(UserModel userModel);

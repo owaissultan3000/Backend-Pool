@@ -1,8 +1,13 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using carpool.Models;
 using carpool.Services.UserServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace carpool.Controllers
 {
@@ -11,11 +16,47 @@ namespace carpool.Controllers
     public class UserController:ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IConfiguration _configuration;  
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService,IConfiguration configuration)
         {
             _userService = userService;
+            _configuration = configuration;
         }
+        [HttpPost]  
+        [Route("UserLogin")]  
+        public async Task<IActionResult> Login([FromBody] UserLogin model)  
+        {  
+            string key ="Roses are red Violets are blue, White wine costs less, Than dinner for two. xDDDD" ;
+            var user = await _userService.GetUser(model.UserEmail);  
+            
+            if (user != null && BCrypt.Net.BCrypt.Verify(model.UserPassword, user.Passwords) == true)  
+            {  
+                // var userRoles = await userManager.GetRolesAsync(user);  
+  
+            // var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenKey   = Encoding.ASCII.GetBytes(key)  ;
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim (ClaimTypes.Name,
+                               model.UserEmail)
+                }),
+                Expires = DateTime.UtcNow.AddHours(24),
+                SigningCredentials = new SigningCredentials(
+                new SymmetricSecurityKey(tokenKey),
+                SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = new JwtSecurityTokenHandler().CreateToken(tokenDescriptor);  
+                return Ok(new  
+                {  
+                    token = new JwtSecurityTokenHandler().WriteToken(token),  
+                    expiration = token.ValidTo  
+                });  
+            }  
+             return Unauthorized();  
+        }  
         [HttpGet("AllUsers")]
         public async Task<IActionResult> AllUsers()
         {
@@ -36,7 +77,7 @@ namespace carpool.Controllers
             }
         }
 
-        [HttpPost("AddUser")]
+        [HttpPost("UserRegistration")]
         public async Task<IActionResult> CreateUser([FromBody]UserModel user)
         {
             if (ModelState.IsValid)
@@ -64,32 +105,7 @@ namespace carpool.Controllers
             else return BadRequest();
         }
 
-        [HttpGet("GetUser")]
-        public async Task<IActionResult> GetUser(string email)
-        {
-            if (email == null)
-            {
-                return BadRequest();
-            }
-
-            try
-            {
-                var user = await _userService.GetUser(email);
-
-                if (user == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(user);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-
-        }
-
+      
         [HttpDelete("DeleteUser")]
         public async Task<IActionResult> DeleteUser(string email)
         {
@@ -116,30 +132,30 @@ namespace carpool.Controllers
             }
         }
 
-        [HttpPut("UpdateUser")]
-        public async Task<IActionResult> UpdateUser([FromBody]UserModel user)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await _userService.UpdateUser(user);
+        // [HttpPut("UpdateUser")]
+        // public async Task<IActionResult> UpdateUser([FromBody]UserModel user)
+        // {
+        //     if (ModelState.IsValid)
+        //     {
+        //         try
+        //         {
+        //             await _userService.UpdateUser(user);
 
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.GetType().FullName == "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
-                    {
-                        return NotFound();
-                    }
+        //             return Ok();
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             if (ex.GetType().FullName == "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
+        //             {
+        //                 return NotFound();
+        //             }
 
-                    return BadRequest();
-                }
-            }
+        //             return BadRequest();
+        //         }
+        //     }
 
-            return BadRequest();
-        }
+        //     return BadRequest();
+        // }
         
     }
 }

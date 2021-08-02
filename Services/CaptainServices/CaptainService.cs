@@ -1,74 +1,123 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using carpool.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace carpool.Services.CaptainServices
 {
     public class CaptainService : ICaptainService
     {
-        public static List<CaptainModel> captains = new List<CaptainModel>{   
-            
-        };
-        public List<CaptainModel> AllCaptains()
+        ApiDbContext _db;
+        
+        public CaptainService(ApiDbContext db)
         {
-            return captains;
+            _db = db;
         }
-
-        public bool CheckCaptainExist(string email)
+        public async Task<List<Captain>> AllCaptains()
         {
-             var check = captains.FirstOrDefault(u => u.Email == email);
-            if (check == null) return false;
-            else return true;
-        }
-
-        public string CreateCaptain(CaptainModel captainModel)
-        {
-            var captain = CheckCaptainExist(captainModel.Email);
-            if (captain) return "Captain Already Exist With Email " + captainModel.Email;
-
-            else
+            if (_db != null)
             {
-            captainModel.CaptainId = Guid.NewGuid();
-            captainModel.Password = captainModel.ConfirmPassword = BCrypt.Net.BCrypt.HashPassword(captainModel.Password);
-            //BCrypt.Net.BCrypt.Verify(entered Password, Db Password); for login
-            captains.Add(captainModel);
-            return "Captain Created Successfully!";
+                return await _db.Captains.ToListAsync();
             }
+
+            return null;
         }
 
-        public string DeleteCaptain(Guid id)
+        public async Task<string> CreateCaptain([FromBody] CaptainModel captainModel)
         {
-            throw new NotImplementedException();
-        }
-
-        public CaptainModel GetCaptain(string email)
-        {
-             return captains.FirstOrDefault(u => u.Email == email);
-        }
-
-        public string UpdateCaptain(CaptainModel captainModel)
-        {
-            var captain = GetCaptain(captainModel.Email);
-            if (captain != null)
+           
+             if (_db != null)
             {
-                if(captain.Email == captainModel.Email)
+                var temp = await _db.Captains.FirstOrDefaultAsync(u => u.Email == captainModel.Email);
+                if (temp == null)
                 {
-                    captain.CaptainName = captainModel.CaptainName;
-                    captain.CaptainPhone = captainModel.CaptainPhone;
-                    captain.Password = captainModel.Password;
-                    captain.ConfirmPassword = captainModel.ConfirmPassword;
-                    captain.Gender = captainModel.Gender;
-                    captain.VehicleNumber = captainModel.VehicleNumber;
-                    captain.VehicleModel = captainModel.VehicleModel;
-                    captain.VehicleColor = captainModel.VehicleColor;
-                    captain.FarePerSeats = captainModel.FarePerSeats;
-                    return "Captain Updated Successfully!";
+                    captainModel.CaptainId = Guid.NewGuid();
+                    captainModel.Password  = BCrypt.Net.BCrypt.HashPassword(captainModel.Password);
+                    Captain captain = new Captain{
+                    CaptainId = captainModel.CaptainId.ToString(),
+                    CaptainName = captainModel.CaptainName.ToLower(),
+                    CaptainPhone = captainModel.CaptainPhone,
+                    Gender = captainModel.Gender.ToLower(),
+                    Email = captainModel.Email.ToLower(),
+                    Passwords = captainModel.Password,
+                    VehicleNumber = captainModel.VehicleNumber,
+                    VehicleColor = captainModel.VehicleColor.ToLower(),
+                    VehicleModel = captainModel.VehicleModel.ToLower(),
+                    Role = captainModel.Role.ToString(),
+                    FarePerSeats = captainModel.FarePerSeats,
+                    CreateionDate = DateTime.Now
+
+                };
+                await _db.Captains.AddAsync(captain);
+                await _db.SaveChangesAsync();
+                return "User Created Successfully";
                 }
-                else return "You can't change your id OR email ";
+                else return "User already exist with email " + captainModel.Email;
             }
-            else return "Something went wrong";
- 
+            return "Unable to create user";
+            
         }
+        
+
+        public async Task<string> DeleteCaptain(string email)
+        {
+             int result = 0;
+
+            if (_db != null)
+            {
+                //Find the post for specific post id
+                Captain captain = await _db.Captains.FirstOrDefaultAsync(u => u.Email == email);
+
+                if (captain != null)
+                {
+                    //Delete that user
+                    _db.Captains.Remove(captain);
+
+                    //Commit the transaction
+                    result = await _db.SaveChangesAsync();
+                }
+                return email+" Deleted Successfully";
+            }
+
+            return "Unable to delete user try again";
+        }
+
+        public async Task<Captain> GetCaptain(string email)
+        {
+             if (_db != null)
+            {
+               Captain captain = await _db.Captains.FirstOrDefaultAsync(u => u.Email == email);
+               return captain;
+            }
+
+            return null;
+        }
+
+        // public string UpdateCaptain(CaptainModel captainModel)
+        // {
+        //     var captain = GetCaptain(captainModel.Email);
+        //     if (captain != null)
+        //     {
+        //         if(captain.Email == captainModel.Email)
+        //         {
+        //             captain.CaptainName = captainModel.CaptainName;
+        //             captain.CaptainPhone = captainModel.CaptainPhone;
+        //             captain.Password = captainModel.Password;
+        //             captain.ConfirmPassword = captainModel.ConfirmPassword;
+        //             captain.Gender = captainModel.Gender;
+        //             captain.VehicleNumber = captainModel.VehicleNumber;
+        //             captain.VehicleModel = captainModel.VehicleModel;
+        //             captain.VehicleColor = captainModel.VehicleColor;
+        //             captain.FarePerSeats = captainModel.FarePerSeats;
+        //             return "Captain Updated Successfully!";
+        //         }
+        //         else return "You can't change your id OR email ";
+        //     }
+        //     else return "Something went wrong";
+ 
+        // }
     }
 }

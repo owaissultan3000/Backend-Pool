@@ -33,8 +33,8 @@ namespace carpool.Models
         public string FarePerSeats { get; set; }
         [StringLength(255)]
         public string Passwords { get; set; }
-        [StringLength(200)]
-        public string CreateionDate { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime? CreateionDate { get; set; }
         [StringLength(10)]
         public string Role { get; set; }
     }

@@ -25,5 +25,7 @@ namespace carpool.Models
         public string Passwords { get; set; }
         [StringLength(10)]
         public string Role { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime? CreateionDate { get; set; }
     }
 }

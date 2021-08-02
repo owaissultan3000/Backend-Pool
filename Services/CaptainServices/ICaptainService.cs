@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using carpool.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace carpool.Services.CaptainServices
 {
     public interface ICaptainService
     {
-        public bool CheckCaptainExist(string email);
-        public List<CaptainModel> AllCaptains();
-        public CaptainModel GetCaptain(string email);
-        public string CreateCaptain(CaptainModel captainModel);
-        public string UpdateCaptain(CaptainModel captainModel);
-        public string DeleteCaptain(Guid id);
+        
+         Task<List<Captain>> AllCaptains();
+         Task<Captain> GetCaptain(string email);
+         Task<string> CreateCaptain(CaptainModel captainModel);
+        // public string UpdateCaptain(CaptainModel captainModel);
+         Task<string> DeleteCaptain(string email);
         
     }
 }

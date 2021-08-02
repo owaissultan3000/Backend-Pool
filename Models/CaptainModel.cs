@@ -51,13 +51,13 @@ namespace carpool.Models
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
 
-        [DataType(DataType.Date)]
-        public DateTime? date;
-        public DateTime Date
-        {
-            get { return date ?? DateTime.Today; }
-            set { date = value; }
-        }
+        // [DataType(DataType.Date)]
+        // public DateTime? date;
+        // public DateTime Date
+        // {
+        //     get { return date ?? DateTime.Today; }
+        //     set { date = value; }
+        // }
 
         public readonly string Role  = "Captain";
 
