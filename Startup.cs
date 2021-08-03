@@ -37,27 +37,20 @@ namespace carpool
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICaptainService, CaptainService>();
             services.AddControllers();
-            services.AddAuthentication(options =>  
-            {  
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;  
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;  
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;  
-            })  
-  
-            // Adding Jwt Bearer  
-            .AddJwtBearer(options =>  
-            {  
-                options.SaveToken = true;  
-                options.RequireHttpsMetadata = false;  
-                options.TokenValidationParameters = new TokenValidationParameters()  
-                {  
-                    ValidateIssuer = true,  
-                    ValidateAudience = true,  
-                    ValidAudience = Configuration["JWT:ValidAudience"],  
-                    ValidIssuer = Configuration["JWT:ValidIssuer"],  
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Roses are red Violets are blue, White wine costs less, Than dinner for two. xDDDD"))  
-                };  
-            });
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                    };
+                }); 
             services.AddControllersWithViews()
             .AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -83,14 +76,16 @@ namespace carpool
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
-            app.UseAuthentication();
+            
 
             app.UseEndpoints(endpoints =>
             {

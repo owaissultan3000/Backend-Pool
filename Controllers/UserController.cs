@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -24,40 +25,35 @@ namespace carpool.Controllers
             _userService = userService;
             _configuration = configuration;
         }
+        [AllowAnonymous]
         [HttpPost]  
         [Route("UserLogin")]  
         public async Task<IActionResult> Login([FromBody] UserLogin model)  
         {  
-            string key ="Roses are red Violets are blue, White wine costs less, Than dinner for two. xDDDD" ;
-            var user = await _userService.GetUser(model.UserEmail);  
+            IActionResult response = Unauthorized();
+            
+            User user = await _userService.GetUser(model.UserEmail);  
             
             if (user != null && BCrypt.Net.BCrypt.Verify(model.UserPassword, user.Passwords) == true)  
             {  
-                // var userRoles = await userManager.GetRolesAsync(user);  
-  
-            // var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenKey   = Encoding.ASCII.GetBytes(key)  ;
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim (ClaimTypes.Name,
-                               model.UserEmail)
-                }),
-                Expires = DateTime.UtcNow.AddHours(24),
-                SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(tokenKey),
-                SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = new JwtSecurityTokenHandler().CreateToken(tokenDescriptor);  
-                return Ok(new  
-                {  
-                    token = new JwtSecurityTokenHandler().WriteToken(token),  
-                    expiration = token.ValidTo  
-                });  
+                    var tokenString = GenerateJSONWebToken(user);
+                     response = Ok(new { token = tokenString });    
             }  
-             return Unauthorized();  
-        }  
+             return response;  
+        }
+
+        private string GenerateJSONWebToken(User userInfo)
+             {
+                 var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                 var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                 var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
+                   _configuration["Jwt:Issuer"],
+                   null,
+                   expires: DateTime.Now.AddMinutes(120),
+                   signingCredentials: credentials);
+                 return new JwtSecurityTokenHandler().WriteToken(token);
+             } 
+
         [HttpGet("AllUsers")]
         public async Task<IActionResult> AllUsers()
         {
@@ -132,6 +128,7 @@ namespace carpool.Controllers
             }
         }
         [Authorize]
+        
         [HttpGet("ViewRides")]
         public async Task<IActionResult> ViewRides()
         {

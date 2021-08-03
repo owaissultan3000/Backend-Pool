@@ -7,6 +7,7 @@ using carpool.Models;
 using carpool.Services.CaptainServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace carpool.Controllers
@@ -16,9 +17,11 @@ namespace carpool.Controllers
     public class CaptainController:ControllerBase
     {
         private readonly ICaptainService _captainService;
-        public CaptainController(ICaptainService captainService)
+        private readonly IConfiguration _configuration; 
+        public CaptainController(ICaptainService captainService,IConfiguration configuration)
         {
             _captainService = captainService;
+            _configuration = configuration;
         }
 
 
@@ -26,33 +29,30 @@ namespace carpool.Controllers
         [Route("CaptainLogin")]  
         public async Task<IActionResult> Login([FromBody] UserLogin model)  
         {  
-            string key ="Roses are red Violets are blue, White wine costs less, Than dinner for two. xDDDD" ;
-            var captain = await _captainService.GetCaptain(model.UserEmail);  
+            IActionResult response = Unauthorized();
+
+            Captain captain = await _captainService.GetCaptain(model.UserEmail);  
             
             if (captain != null && BCrypt.Net.BCrypt.Verify(model.UserPassword, captain.Passwords) == true)  
             {  
-            var tokenKey   = Encoding.ASCII.GetBytes(key)  ;
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim (ClaimTypes.Name,
-                               model.UserEmail)
-                }),
-                Expires = DateTime.UtcNow.AddHours(24),
-                SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(tokenKey),
-                SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = new JwtSecurityTokenHandler().CreateToken(tokenDescriptor);  
-                return Ok(new  
-                {  
-                    token = new JwtSecurityTokenHandler().WriteToken(token),  
-                    expiration = token.ValidTo  
-                });  
-            }  
-             return Unauthorized();  
-        } 
+                    var tokenString = GenerateJSONWebToken(captain);
+                     response = Ok(new { token = tokenString });
+             
+            }
+            return response;
+        }     
+
+        private string GenerateJSONWebToken(Captain userInfo)
+             {
+                 var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                 var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                 var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
+                   _configuration["Jwt:Issuer"],
+                   null,
+                   expires: DateTime.Now.AddMinutes(120),
+                   signingCredentials: credentials);
+                 return new JwtSecurityTokenHandler().WriteToken(token);
+             }
 
         [HttpGet("AllCaptains")]
         public async Task<IActionResult> AllCaptains()
@@ -98,7 +98,7 @@ namespace carpool.Controllers
             }
         }
 
-        // [Authorize]
+        [Authorize]
         [HttpPost("CreateRide")]
         public async Task<IActionResult> CreateRide(CreateRideModel rideModel)
         {

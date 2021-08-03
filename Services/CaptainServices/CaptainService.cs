@@ -64,7 +64,7 @@ namespace carpool.Services.CaptainServices
         {
             if (_db != null)
             {
-                var temp = await _db.Rides.FirstOrDefaultAsync(u => u.RideId == rideModel.RideId.ToString());
+                var temp = await _db.Rides.FirstOrDefaultAsync(u => u.CaptainId == rideModel.CaptainId.ToString());
                 if (temp == null)
                 {
                     rideModel.RideId = Guid.NewGuid();
