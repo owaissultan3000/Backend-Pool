@@ -37,7 +37,7 @@ namespace carpool.Models
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
 
-        public Role_Rpg Role { get; set; } = Role_Rpg.User;
+        public string Role { get; set; }
 
     }
 }

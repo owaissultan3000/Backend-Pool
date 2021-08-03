@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using carpool.Models;
 using carpool.Services.CaptainServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -82,6 +83,7 @@ namespace carpool.Controllers
                 throw new Exception();
             }
         }
+
         [HttpDelete("DeleteCaptain")]
         public async Task<IActionResult> DeleteCaptain(string email)
         {
@@ -94,6 +96,23 @@ namespace carpool.Controllers
             {
                 throw new Exception();
             }
+        }
+
+        // [Authorize]
+        [HttpPost("CreateRide")]
+        public async Task<IActionResult> CreateRide(CreateRideModel rideModel)
+        {
+            try
+            {
+                var data = await _captainService.CreateRide(rideModel);
+                return Ok(data);
+
+            }
+            catch (Exception )
+            {
+                throw new Exception();
+            }
+
         }
     }
 }

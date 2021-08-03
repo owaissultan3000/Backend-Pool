@@ -47,18 +47,47 @@ namespace carpool.Services.CaptainServices
                     VehicleColor = captainModel.VehicleColor.ToLower(),
                     VehicleModel = captainModel.VehicleModel.ToLower(),
                     Role = captainModel.Role.ToString(),
-                    FarePerSeats = captainModel.FarePerSeats,
                     CreateionDate = DateTime.Now
 
                 };
                 await _db.Captains.AddAsync(captain);
                 await _db.SaveChangesAsync();
-                return "User Created Successfully";
+                return "Captain Created Successfully";
                 }
                 else return "User already exist with email " + captainModel.Email;
             }
             return "Unable to create user";
             
+        }
+
+        public async Task<string> CreateRide([FromBody] CreateRideModel rideModel)
+        {
+            if (_db != null)
+            {
+                var temp = await _db.Rides.FirstOrDefaultAsync(u => u.RideId == rideModel.RideId.ToString());
+                if (temp == null)
+                {
+                    rideModel.RideId = Guid.NewGuid();
+                    Ride ride = new Ride{
+                        RideId = rideModel.RideId.ToString(),
+                        CaptainId = rideModel.CaptainId.ToString(),
+                        Name = rideModel.Name.ToLower(),
+                        PhoneNumber = rideModel.PhoneNumber,
+                        VehicleId = rideModel.VehicleID,
+                        JourneyRoute = rideModel.JourneyRoute.ToLower(),
+                        DepartureTime = rideModel.DepartureTime,
+                        FarePerSeats = rideModel.FarePerSeats
+
+                };
+                await _db.Rides.AddAsync(ride);
+                await _db.SaveChangesAsync();
+                return "Ride Created Successfully";
+                }
+                else return "Can't Create More Than One Ride At A Time";
+                
+                
+            }
+            return "Unable to create ride try again";
         }
         
 

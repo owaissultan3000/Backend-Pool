@@ -38,7 +38,6 @@ namespace carpool.Models
         public string VehicleColor { get; set; }
         public string CaptainImage { get; set; }
 
-        public string FarePerSeats { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
         [StringLength(255, ErrorMessage = "Too Short Password", MinimumLength = 8)]
@@ -59,7 +58,7 @@ namespace carpool.Models
         //     set { date = value; }
         // }
 
-        public readonly string Role  = "Captain";
+        public string Role { get; set; }
 
     }
 }

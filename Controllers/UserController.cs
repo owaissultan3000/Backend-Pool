@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using carpool.Models;
 using carpool.Services.UserServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -60,7 +61,6 @@ namespace carpool.Controllers
         [HttpGet("AllUsers")]
         public async Task<IActionResult> AllUsers()
         {
-            // return Ok(_userService.AllUsers());
              try
             {
                 var users = await _userService.AllUsers();
@@ -130,6 +130,26 @@ namespace carpool.Controllers
 
                 return BadRequest();
             }
+        }
+        [Authorize]
+        [HttpGet("ViewRides")]
+        public async Task<IActionResult> ViewRides()
+        {
+             try
+            {
+                var rides = await _userService.AvailableRides();
+                if (rides == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(rides);
+            }
+            catch (Exception )
+            {
+                return BadRequest();
+            }
+
         }
 
         // [HttpPut("UpdateUser")]

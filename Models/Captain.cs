@@ -10,6 +10,11 @@ namespace carpool.Models
 {
     public partial class Captain
     {
+        public Captain()
+        {
+            Rides = new HashSet<Ride>();
+        }
+
         [Key]
         [StringLength(255)]
         public string CaptainId { get; set; }
@@ -27,15 +32,16 @@ namespace carpool.Models
         public string VehicleModel { get; set; }
         [StringLength(20)]
         public string VehicleColor { get; set; }
-        [StringLength(2000)]
-        public string CaptainImage { get; set; }
-        [StringLength(70)]
-        public string FarePerSeats { get; set; }
+        [Column(TypeName = "image")]
+        public byte[] CaptainImage { get; set; }
         [StringLength(255)]
         public string Passwords { get; set; }
         [Column(TypeName = "date")]
         public DateTime? CreateionDate { get; set; }
         [StringLength(10)]
         public string Role { get; set; }
+
+        [InverseProperty(nameof(Ride.Captain))]
+        public virtual ICollection<Ride> Rides { get; set; }
     }
 }

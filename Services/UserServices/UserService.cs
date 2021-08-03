@@ -117,5 +117,15 @@ namespace carpool.Services.UserServices
             }
             return "Something went wrong try again";
         }
+
+        public async Task<List<Ride>> AvailableRides()
+        {
+            if (db != null)
+            {
+                return await db.Rides.ToListAsync();
+            }
+
+            return null;
+        }
     }
 }

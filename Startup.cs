@@ -83,8 +83,7 @@ namespace carpool
                 app.UseHsts();
             }
 
-            app.UseStatusCodePages();
-
+            app.UseHttpsRedirection();
             app.UseHttpsRedirection();
 
             app.UseRouting();

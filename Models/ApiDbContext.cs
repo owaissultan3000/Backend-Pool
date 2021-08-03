@@ -18,6 +18,7 @@ namespace carpool.Models
         }
 
         public virtual DbSet<Captain> Captains { get; set; }
+        public virtual DbSet<Ride> Rides { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -37,17 +38,11 @@ namespace carpool.Models
             {
                 entity.Property(e => e.CaptainId).IsUnicode(false);
 
-                entity.Property(e => e.CaptainImage).IsUnicode(false);
-
                 entity.Property(e => e.CaptainName).IsUnicode(false);
 
                 entity.Property(e => e.CaptainPhone).IsUnicode(false);
 
-                entity.Property(e => e.CreateionDate).IsUnicode(false);
-
                 entity.Property(e => e.Email).IsUnicode(false);
-
-                entity.Property(e => e.FarePerSeats).IsUnicode(false);
 
                 entity.Property(e => e.Gender).IsUnicode(false);
 
@@ -60,6 +55,28 @@ namespace carpool.Models
                 entity.Property(e => e.VehicleModel).IsUnicode(false);
 
                 entity.Property(e => e.VehicleNumber).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Ride>(entity =>
+            {
+                entity.Property(e => e.RideId).IsUnicode(false);
+
+                entity.Property(e => e.CaptainId).IsUnicode(false);
+
+                entity.Property(e => e.FarePerSeats).IsUnicode(false);
+
+                entity.Property(e => e.JourneyRoute).IsUnicode(false);
+
+                entity.Property(e => e.Name).IsUnicode(false);
+
+                entity.Property(e => e.PhoneNumber).IsUnicode(false);
+
+                entity.Property(e => e.VehicleId).IsUnicode(false);
+
+                entity.HasOne(d => d.Captain)
+                    .WithMany(p => p.Rides)
+                    .HasForeignKey(d => d.CaptainId)
+                    .HasConstraintName("FK__Rides__CaptainId__3D5E1FD2");
             });
 
             modelBuilder.Entity<User>(entity =>

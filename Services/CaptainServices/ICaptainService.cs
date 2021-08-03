@@ -14,6 +14,7 @@ namespace carpool.Services.CaptainServices
          Task<string> CreateCaptain(CaptainModel captainModel);
         // public string UpdateCaptain(CaptainModel captainModel);
          Task<string> DeleteCaptain(string email);
+         Task<string> CreateRide(CreateRideModel rideModel);     
         
     }
 }

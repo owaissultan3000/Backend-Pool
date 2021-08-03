@@ -12,5 +12,6 @@ namespace carpool.Services.UserServices
         public Task<string> CreateUser(UserModel userModel);
         public Task<string> UpdateUser(UserModel userModel);
         public Task<string> DeleteUser(string email);
+        public Task<List<Ride>> AvailableRides();
     }
 }
