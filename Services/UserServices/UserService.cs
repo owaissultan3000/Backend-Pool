@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using carpool.Models;
 using Microsoft.EntityFrameworkCore;
@@ -118,7 +119,7 @@ namespace carpool.Services.UserServices
             return "Something went wrong try again";
         }
 
-        public async Task<List<Ride>> AvailableRides()
+        public async Task<List<Ride>> ViewAvailableRides()
         {
             if (db != null)
             {
@@ -126,6 +127,33 @@ namespace carpool.Services.UserServices
             }
 
             return null;
+        }
+
+        public async Task<string> BookRide(BookRide bookRide)
+        {
+            if (db != null)
+            {
+                Booking ride = await db.Bookings.FirstOrDefaultAsync(b => b.PassengerId == bookRide.PassengerId.ToString() );
+                if (ride == null)
+                {
+                    bookRide.BookingId = Guid.NewGuid();
+                    Booking booking = new Booking{
+                        BookingId = bookRide.BookingId.ToString(),
+                        CaptainId = bookRide.CaptainId.ToString(),
+                        PassengerId = bookRide.PassengerId.ToString(),
+                        PassengerName = bookRide.PassengerName,
+                        PassengerPhoneNumber = bookRide.PassengerPhoneNumber,
+                        PassengerDestination = bookRide.PassengerDestination
+                };
+                   await db.Bookings.AddAsync(booking);
+                   await db.SaveChangesAsync();
+                   return "Ride Booked Successfully";
+                }
+            return "You already booked a ride";
+
+            }
+        return "Something went wrong try again";
+
         }
     }
 }

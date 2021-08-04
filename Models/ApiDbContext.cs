@@ -17,6 +17,7 @@ namespace carpool.Models
         {
         }
 
+        public virtual DbSet<Booking> Bookings { get; set; }
         public virtual DbSet<Captain> Captains { get; set; }
         public virtual DbSet<Ride> Rides { get; set; }
         public virtual DbSet<User> Users { get; set; }
@@ -33,6 +34,31 @@ namespace carpool.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<Booking>(entity =>
+            {
+                entity.Property(e => e.BookingId).IsUnicode(false);
+
+                entity.Property(e => e.CaptainId).IsUnicode(false);
+
+                entity.Property(e => e.PassengerDestination).IsUnicode(false);
+
+                entity.Property(e => e.PassengerId).IsUnicode(false);
+
+                entity.Property(e => e.PassengerName).IsUnicode(false);
+
+                entity.Property(e => e.PassengerPhoneNumber).IsUnicode(false);
+
+                entity.HasOne(d => d.Captain)
+                    .WithMany(p => p.Bookings)
+                    .HasForeignKey(d => d.CaptainId)
+                    .HasConstraintName("FK__Booking__Captain__5CD6CB2B");
+
+                entity.HasOne(d => d.Passenger)
+                    .WithMany(p => p.Bookings)
+                    .HasForeignKey(d => d.PassengerId)
+                    .HasConstraintName("FK__Booking__Passeng__5DCAEF64");
+            });
 
             modelBuilder.Entity<Captain>(entity =>
             {
@@ -76,7 +102,7 @@ namespace carpool.Models
                 entity.HasOne(d => d.Captain)
                     .WithMany(p => p.Rides)
                     .HasForeignKey(d => d.CaptainId)
-                    .HasConstraintName("FK__Rides__CaptainId__3D5E1FD2");
+                    .HasConstraintName("FK__Rides__CaptainId__59FA5E80");
             });
 
             modelBuilder.Entity<User>(entity =>

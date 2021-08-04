@@ -31,6 +31,7 @@ namespace carpool.Models
         public DateTime DepartureTime { get; set; }
         [StringLength(70)]
         public string FarePerSeats { get; set; }
+        public int? AvailableSeats { get; set; }
 
         [ForeignKey(nameof(CaptainId))]
         [InverseProperty("Rides")]

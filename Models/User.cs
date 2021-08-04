@@ -10,6 +10,11 @@ namespace carpool.Models
 {
     public partial class User
     {
+        public User()
+        {
+            Bookings = new HashSet<Booking>();
+        }
+
         [Key]
         [StringLength(255)]
         public string UserId { get; set; }
@@ -27,5 +32,8 @@ namespace carpool.Models
         public string Role { get; set; }
         [Column(TypeName = "date")]
         public DateTime? CreateionDate { get; set; }
+
+        [InverseProperty(nameof(Booking.Passenger))]
+        public virtual ICollection<Booking> Bookings { get; set; }
     }
 }

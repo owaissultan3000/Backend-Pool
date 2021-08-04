@@ -53,7 +53,7 @@ namespace carpool.Controllers
                    signingCredentials: credentials);
                  return new JwtSecurityTokenHandler().WriteToken(token);
              }
-
+        [Authorize]
         [HttpGet("AllCaptains")]
         public async Task<IActionResult> AllCaptains()
         {
@@ -68,7 +68,7 @@ namespace carpool.Controllers
                 throw new Exception();
             }
         }
-
+        [AllowAnonymous]
         [HttpPost("CaptainRegistration")]
         public async Task<IActionResult> CreateCaptain(CaptainModel captainModel)
         {
@@ -83,7 +83,7 @@ namespace carpool.Controllers
                 throw new Exception();
             }
         }
-
+        [Authorize]
         [HttpDelete("DeleteCaptain")]
         public async Task<IActionResult> DeleteCaptain(string email)
         {

@@ -53,7 +53,7 @@ namespace carpool.Controllers
                    signingCredentials: credentials);
                  return new JwtSecurityTokenHandler().WriteToken(token);
              } 
-
+        [Authorize]
         [HttpGet("AllUsers")]
         public async Task<IActionResult> AllUsers()
         {
@@ -79,7 +79,8 @@ namespace carpool.Controllers
             if (ModelState.IsValid)
             {
                  try
-                {
+                 {
+                
                     var tempuser = await _userService.CreateUser(user);
                     if (tempuser != null)
                     {
@@ -101,7 +102,7 @@ namespace carpool.Controllers
             else return BadRequest();
         }
 
-      
+        [Authorize]    
         [HttpDelete("DeleteUser")]
         public async Task<IActionResult> DeleteUser(string email)
         {
@@ -129,12 +130,12 @@ namespace carpool.Controllers
         }
         [Authorize]
         
-        [HttpGet("ViewRides")]
-        public async Task<IActionResult> ViewRides()
+        [HttpGet("AvailableRides")]
+        public async Task<IActionResult> BookRide()
         {
              try
             {
-                var rides = await _userService.AvailableRides();
+                var rides = await _userService.ViewAvailableRides();
                 if (rides == null)
                 {
                     return NotFound();
@@ -148,7 +149,24 @@ namespace carpool.Controllers
             }
 
         }
-
+        [Authorize]
+        [HttpPost("BookRide")]
+        public async Task<IActionResult> BookRide([FromBody]BookRide ride)
+        {
+            try
+            {
+                var bookRide = await _userService.BookRide(ride);
+                if (bookRide == null)
+                {
+                    return NotFound();
+                }
+                return Ok(bookRide);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
         // [HttpPut("UpdateUser")]
         // public async Task<IActionResult> UpdateUser([FromBody]UserModel user)
         // {

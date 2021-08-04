@@ -12,6 +12,7 @@ namespace carpool.Models
     {
         public Captain()
         {
+            Bookings = new HashSet<Booking>();
             Rides = new HashSet<Ride>();
         }
 
@@ -41,6 +42,8 @@ namespace carpool.Models
         [StringLength(10)]
         public string Role { get; set; }
 
+        [InverseProperty(nameof(Booking.Captain))]
+        public virtual ICollection<Booking> Bookings { get; set; }
         [InverseProperty(nameof(Ride.Captain))]
         public virtual ICollection<Ride> Rides { get; set; }
     }

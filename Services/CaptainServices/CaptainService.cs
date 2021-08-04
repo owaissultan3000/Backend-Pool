@@ -76,7 +76,8 @@ namespace carpool.Services.CaptainServices
                         VehicleId = rideModel.VehicleID,
                         JourneyRoute = rideModel.JourneyRoute.ToLower(),
                         DepartureTime = rideModel.DepartureTime,
-                        FarePerSeats = rideModel.FarePerSeats
+                        FarePerSeats = rideModel.FarePerSeats,
+                        AvailableSeats = rideModel.AvailableSeats,
 
                 };
                 await _db.Rides.AddAsync(ride);
