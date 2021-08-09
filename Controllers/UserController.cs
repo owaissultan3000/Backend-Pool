@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 using carpool.Models;
 using carpool.Services.UserServices;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace carpool.Controllers
 {
+    [EnableCors("CorsPolicy")]
     [ApiController]
     [Route("[controller]")]
     public class UserController:ControllerBase
@@ -27,6 +29,7 @@ namespace carpool.Controllers
         }
         [AllowAnonymous]
         [HttpPost]  
+        [EnableCors("CorsPolicy")]
         [Route("UserLogin")]  
         public async Task<IActionResult> Login([FromBody] UserLogin model)  
         {  
@@ -53,8 +56,9 @@ namespace carpool.Controllers
                    signingCredentials: credentials);
                  return new JwtSecurityTokenHandler().WriteToken(token);
              } 
-        [Authorize]
+        // [Authorize]
         [HttpGet("AllUsers")]
+        [EnableCors("CorsPolicy")]
         public async Task<IActionResult> AllUsers()
         {
              try
@@ -74,6 +78,7 @@ namespace carpool.Controllers
         }
 
         [HttpPost("UserRegistration")]
+        
         public async Task<IActionResult> CreateUser([FromBody]UserModel user)
         {
             if (ModelState.IsValid)

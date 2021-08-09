@@ -23,6 +23,7 @@ namespace carpool
 {
     public class Startup
     {
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -33,6 +34,14 @@ namespace carpool
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+           services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
+             
             services.AddDbContext<ApiDbContext>(item => item.UseSqlServer(Configuration.GetConnectionString("CarpoolDBConnection")));
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICaptainService, CaptainService>();
@@ -51,10 +60,12 @@ namespace carpool
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                     };
                 }); 
+               
             services.AddControllersWithViews()
             .AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "carpool", Version = "v1" });
@@ -73,13 +84,17 @@ namespace carpool
             else
             {
                 app.UseExceptionHandler("/Error");
+                app.UseHttpsRedirection();
                 app.UseHsts();
             }
 
             
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("CorsPolicy");
 
             app.UseAuthentication();
 
