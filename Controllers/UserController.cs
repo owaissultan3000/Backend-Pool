@@ -40,7 +40,7 @@ namespace carpool.Controllers
             if (user != null && BCrypt.Net.BCrypt.Verify(model.UserPassword, user.Passwords) == true)  
             {  
                     var tokenString = GenerateJSONWebToken(user);
-                     response = Ok(new { token = tokenString });    
+                     response = Ok(new { tokenString });    
             }  
              return response;  
         }
@@ -56,28 +56,10 @@ namespace carpool.Controllers
                    signingCredentials: credentials);
                  return new JwtSecurityTokenHandler().WriteToken(token);
              } 
-        // [Authorize]
-        [HttpGet("AllUsers")]
-        [EnableCors("CorsPolicy")]
-        public async Task<IActionResult> AllUsers()
-        {
-             try
-            {
-                var users = await _userService.AllUsers();
-                if (users == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(users);
-            }
-            catch (Exception )
-            {
-                return BadRequest();
-            }
-        }
+    
 
         [HttpPost("UserRegistration")]
+        [EnableCors("CorsPolicy")]
         
         public async Task<IActionResult> CreateUser([FromBody]UserModel user)
         {
@@ -107,7 +89,6 @@ namespace carpool.Controllers
             else return BadRequest();
         }
 
-        [Authorize]    
         [HttpDelete("DeleteUser")]
         public async Task<IActionResult> DeleteUser(string email)
         {

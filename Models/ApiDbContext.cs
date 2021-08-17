@@ -17,6 +17,7 @@ namespace carpool.Models
         {
         }
 
+        public virtual DbSet<Admin> Admins { get; set; }
         public virtual DbSet<Booking> Bookings { get; set; }
         public virtual DbSet<Captain> Captains { get; set; }
         public virtual DbSet<Ride> Rides { get; set; }
@@ -34,6 +35,23 @@ namespace carpool.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<Admin>(entity =>
+            {
+                entity.Property(e => e.AdminId).IsUnicode(false);
+
+                entity.Property(e => e.AdminName).IsUnicode(false);
+
+                entity.Property(e => e.CreationDate).IsUnicode(false);
+
+                entity.Property(e => e.Email).IsUnicode(false);
+
+                entity.Property(e => e.Passwords).IsUnicode(false);
+
+                entity.Property(e => e.PhoneNumber).IsUnicode(false);
+
+                entity.Property(e => e.Role).IsUnicode(false);
+            });
 
             modelBuilder.Entity<Booking>(entity =>
             {

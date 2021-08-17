@@ -10,61 +10,20 @@ namespace carpool.Services.CaptainServices
 {
     public class CaptainService : ICaptainService
     {
-        ApiDbContext _db;
+        ApiDbContext db;
         
-        public CaptainService(ApiDbContext db)
+        public CaptainService(ApiDbContext _db)
         {
-            _db = db;
-        }
-        public async Task<List<Captain>> AllCaptains()
-        {
-            if (_db != null)
-            {
-                return await _db.Captains.ToListAsync();
-            }
-
-            return null;
+            db = _db;
         }
 
-        public async Task<string> CreateCaptain([FromBody] CaptainModel captainModel)
-        {
-           
-             if (_db != null)
-            {
-                var temp = await _db.Captains.FirstOrDefaultAsync(u => u.Email == captainModel.Email);
-                if (temp == null)
-                {
-                    captainModel.CaptainId = Guid.NewGuid();
-                    captainModel.Password  = BCrypt.Net.BCrypt.HashPassword(captainModel.Password);
-                    Captain captain = new Captain{
-                    CaptainId = captainModel.CaptainId.ToString(),
-                    CaptainName = captainModel.CaptainName.ToLower(),
-                    CaptainPhone = captainModel.CaptainPhone,
-                    Gender = captainModel.Gender.ToLower(),
-                    Email = captainModel.Email.ToLower(),
-                    Passwords = captainModel.Password,
-                    VehicleNumber = captainModel.VehicleNumber,
-                    VehicleColor = captainModel.VehicleColor.ToLower(),
-                    VehicleModel = captainModel.VehicleModel.ToLower(),
-                    Role = captainModel.Role.ToString(),
-                    CreateionDate = DateTime.Now
 
-                };
-                await _db.Captains.AddAsync(captain);
-                await _db.SaveChangesAsync();
-                return "Captain Created Successfully";
-                }
-                else return "User already exist with email " + captainModel.Email;
-            }
-            return "Unable to create user";
-            
-        }
 
         public async Task<string> CreateRide([FromBody] CreateRideModel rideModel)
         {
-            if (_db != null)
+            if (db != null)
             {
-                var temp = await _db.Rides.FirstOrDefaultAsync(u => u.CaptainId == rideModel.CaptainId.ToString());
+                var temp = await db.Rides.FirstOrDefaultAsync(u => u.CaptainId == rideModel.CaptainId.ToString());
                 if (temp == null)
                 {
                     rideModel.RideId = Guid.NewGuid();
@@ -80,8 +39,8 @@ namespace carpool.Services.CaptainServices
                         AvailableSeats = rideModel.AvailableSeats,
 
                 };
-                await _db.Rides.AddAsync(ride);
-                await _db.SaveChangesAsync();
+                await db.Rides.AddAsync(ride);
+                await db.SaveChangesAsync();
                 return "Ride Created Successfully";
                 }
                 else return "Can't Create More Than One Ride At A Time";
@@ -92,34 +51,13 @@ namespace carpool.Services.CaptainServices
         }
         
 
-        public async Task<string> DeleteCaptain(string email)
-        {
-             int result = 0;
-
-            if (_db != null)
-            {
-                //Find the post for specific post id
-                Captain captain = await _db.Captains.FirstOrDefaultAsync(u => u.Email == email);
-
-                if (captain != null)
-                {
-                    //Delete that user
-                    _db.Captains.Remove(captain);
-
-                    //Commit the transaction
-                    result = await _db.SaveChangesAsync();
-                }
-                return email+" Deleted Successfully";
-            }
-
-            return "Unable to delete user try again";
-        }
+       
 
         public async Task<Captain> GetCaptain(string email)
         {
-             if (_db != null)
+             if (db != null)
             {
-               Captain captain = await _db.Captains.FirstOrDefaultAsync(u => u.Email == email);
+               Captain captain = await db.Captains.FirstOrDefaultAsync(u => u.Email == email);
                return captain;
             }
 

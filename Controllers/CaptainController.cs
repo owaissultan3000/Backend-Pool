@@ -53,50 +53,9 @@ namespace carpool.Controllers
                    signingCredentials: credentials);
                  return new JwtSecurityTokenHandler().WriteToken(token);
              }
-        [Authorize]
-        [HttpGet("AllCaptains")]
-        public async Task<IActionResult> AllCaptains()
-        {
-            try
-            {
-                var data = await _captainService.AllCaptains();
-                return Ok(data);
-            }
-            
-            catch (Exception )
-            {
-                throw new Exception();
-            }
-        }
-        [AllowAnonymous]
-        [HttpPost("CaptainRegistration")]
-        public async Task<IActionResult> CreateCaptain(CaptainModel captainModel)
-        {
-            try
-            {
-                var data = await _captainService.CreateCaptain(captainModel);
-                return Ok(data);
-            }
-            
-            catch (Exception )
-            {
-                throw new Exception();
-            }
-        }
-        [Authorize]
-        [HttpDelete("DeleteCaptain")]
-        public async Task<IActionResult> DeleteCaptain(string email)
-        {
-            try
-            {
-                var data = await _captainService.DeleteCaptain(email);
-                return Ok(data);
-            }
-            catch (Exception )
-            {
-                throw new Exception();
-            }
-        }
+       
+       
+        
 
         [Authorize]
         [HttpPost("CreateRide")]
